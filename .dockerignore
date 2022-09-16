@@ -1,0 +1,4 @@
+App.DockerFile
+docker-compose.prod.yml
+docker-compose.yml
+yarn.lock

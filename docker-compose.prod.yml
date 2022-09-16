@@ -1,0 +1,52 @@
+version: "3.6"
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    networks:
+      - internal
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+  app:
+    ports:
+      - "3000:3000"
+    container_name: app
+    volumes:
+      - ./logs:/home/application/logs
+      - type: bind
+        source: .env
+        target: /home/application/.env
+    depends_on:
+      - mongo
+    networks:
+      - internal
+      - global
+    build:
+      context: .
+      dockerfile: App.DockerFile
+    restart: always
+  ahref_app:
+    ports:
+      - "3001:3001"
+    container_name: ahref_app
+    volumes:
+      - ./logs:/home/application/logs
+      - type: bind
+        source: .env
+        target: /home/application/.env
+    depends_on:
+      - mongo
+    networks:
+      - internal
+      - global
+    build:
+      context: .
+      dockerfile: AhrefApp.DockerFile
+    restart: always
+networks:
+  internal:
+    external: false
+  global:
+    external: true
